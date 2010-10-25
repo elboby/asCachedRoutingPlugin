@@ -1,0 +1,37 @@
+all:
+  asCachedRoutingPlugin:
+    #routing rules will be added to the webserver configuration
+    web_server_config: 
+      #could be apache, nginx* or lighttpd*
+      type: apache
+      #location of the config file to be generated
+      target_path: %SF_WEB_DIR%/.htaccess
+      #location of the template to use
+      template_path: %SF_PLUGINS_DIR%/asCachedRoutingPlugin/data/.htaccess.template
+    #small frontend controllers specific to each rules
+    controller:
+      #location of the template to use
+      template_path: %SF_PLUGINS_DIR%/asCachedRoutingPlugin/data/index.php.template
+      #directory in %SF_WEB_DIR% that will be used to generate the rule
+      #also where the controller will be stored
+      target_directory: _cache_routing/
+    #here you can customize the factory 
+    #also the way config file/rules will be handled by defining which class to call
+    factory:
+      apache:
+        config_file:
+          class: ApacheModRewriteConfigFile
+        rule_format:
+          class: ApacheModRewriteRuleFormatter
+          parameters:
+            rule_options: "[QSA,L]"   
+      nginx:
+        config_file:
+          class: NginxRewriteConfFile
+        rule_format:
+          class: NginxRewriteRuleFormatter
+      lighttpd:
+        config_file:
+          class: LighttpdConfigFile
+        rule_format:
+          class: LighttpdRuleFormatter

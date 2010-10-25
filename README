@@ -1,0 +1,14 @@
+asCachedRoutingPlugin
+---
+
+Introduction
+---
+
+How to use
+---
+* Install the plugin
+* Configure the right application (frontend) in the right environment (prod) via app.yml
+* Setup your webserver 
+* Launch the pake task to generate the routing classes.
+
+

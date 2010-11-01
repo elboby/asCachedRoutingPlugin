@@ -2,74 +2,80 @@
 
 class asCachedRoutingApplication
 {
-  protected $configuration;
+  protected $configuration, $web_server_config, $controller_config;
   
-  public function __construct($configuration)
+  public function __construct($configuration, $web_server_config, $controller_config)
   {
-    $this->configuration = $configuration;
+    $this->configuration      = $configuration;
+    $this->web_server_config  = $web_server_config;
+    $this->controller_config  = $controller_config;
   }
   
   public function doProcess()  
   {    
-    //get info from routing config
-    $config =  $this->configuration->getConfigCache()->checkConfig('config/routing.yml', true);
-    $this->log('going to include the file: '.$config);
-    $formatted_routes = $this->parseConfig(include($config));
-    
-    $file = WebServerHandlerFactory::getConfigFileInstance(sfConfig::get('app_asCachedRoutingPlugin_web_server_config'));
-    $file->loadRulesBlock($this->convertAsBlock($formatted_routes));
-    $file->create();
+    $formatted_routes = $this->retrieveFormattedRoutes();
+    $this->createControllerFile($formatted_routes);
   }
   
-  protected function parseConfig($routes)
+  protected function retrieveFormattedRoutes()
+  {
+    $config =  $this->configuration->getConfigCache()->checkConfig('config/routing.yml', true);
+    $this->log('going to include the file: '.$config);
+    return $this->formatRoutes(include($config));
+  }
+  
+  protected function formatRoutes($routes)
   {
     $output = array();
     
     foreach($routes as $name=>$route)
     {
-      $array_defaults = $route->getDefaults();
+      $formatted_route = $this->formatRoute($route);
       
-      //rules with wildcards as module/action they should be at the end of the htaccess file
-      if( ! isset($array_defaults['module']) || !isset($array_defaults['action'])  )
-      {
-        continue;
+      if($formatted_route === null)
+      { 
+        continue; 
       }
-      
-      $output[$name] = WebServerHandlerFactory::getRuleInstance(
-                                                  sfConfig::get('app_asCachedRoutingPlugin_web_server_config'),
-                                                  $route
-                                                );
+      else 
+      {
+        $output[$name] = $formatted_route;
+      }
     }
 
     return $output;
   }
   
-  private function convertAsBlock($arrayRules)
+  protected function formatRoute(sfRoute $route)
   {
-    $controller_config = sfConfig::get('app_asCachedRoutingPlugin_controller');
-    
-    
-    $out = '';
-    foreach($arrayRules as $name=>$rule)
-    {
-      $target_file = $controller_config['target_directory'].$name.'.php';
-      
-      $out .= $rule->getRule($target_file)."\n";
-      
-      $controller = new CachedControllerFile(
-            'frontend',
-            'prod',
-            sfConfig::get('sf_web_dir').'/'.$target_file
-          );
-      $controller->loadTemplate($controller_config['template_path']);
-      $controller->loadRule($name, $rule->getComposite());
-      
-      if($rule->hasPatternKey())
+      //rules with wildcards as module/action they should be at the end of the htaccess file
+      $array_defaults = $route->getDefaults();
+      if( ! isset($array_defaults['module']) || ! isset($array_defaults['action'])  ) 
       {
-        $controller->loadPatternKeys($rule->getPatternKeyAsArray());
+        return null; 
       }
       
+      return $this->web_server_config->getRuleInstance($route);
+  }
+  
+  protected function createControllerFile($formatted_routes)
+  {
+    $file = $this->web_server_config->getConfigFileInstance();
+    $file->loadRulesBlock($this->processBlock($formatted_routes));
+    $file->create();
+  }
+  
+  private function processBlock($arrayRules)
+  {
+    $out = '';
+    
+    foreach($arrayRules as $name=>$rule)
+    {
+      $target_file = $this->controller_config->getTargetFileName($name);
+      
+      $controller = $this->controller_config->getCachedControllerInstance($name, $rule);
       $controller->create();
+      
+      $out .= $rule->getRule($target_file)."\n";
     }
     return $out;
   }

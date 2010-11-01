@@ -29,9 +29,14 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     // add your code here
-    WebServerHandlerFactory::loadConfiguration(sfConfig::get('app_asCachedRoutingPlugin_factory'));
     
-    $app = new asCachedRoutingApplication($this->configuration);
+    $web_server_config = new WebServerConfiguration(sfConfig::get('app_asCachedRoutingPlugin_web_server_config'));
+    $web_server_config->initFor($arguments['server']);
+    
+    $controller_config = new ControllerConfiguration(sfConfig::get('app_asCachedRoutingPlugin_controller'));
+    $controller_config->init();
+    
+    $app = new asCachedRoutingApplication($this->configuration, $web_server_config, $controller_config);
     $app->doProcess();
   }
 }

@@ -1,14 +1,6 @@
 all:
   asCachedRoutingPlugin:
-    #routing rules will be added to the webserver configuration
-    web_server_config: 
-      #could be apache, nginx* or lighttpd*
-      type: apache
-      #location of the config file to be generated
-      target_path: %SF_WEB_DIR%/.htaccess
-      #location of the template to use
-      template_path: %SF_PLUGINS_DIR%/asCachedRoutingPlugin/data/.htaccess.template
-    #small frontend controllers specific to each rules
+    #setupf for small frontend controllers specific to each rules
     controller:
       #location of the template to use
       template_path: %SF_PLUGINS_DIR%/asCachedRoutingPlugin/data/index.php.template
@@ -17,21 +9,27 @@ all:
       target_directory: _cache_routing/
     #here you can customize the factory 
     #also the way config file/rules will be handled by defining which class to call
-    factory:
+    web_server_config:
       apache:
+        #config file for the web server
         config_file:
+          #location of the config file to be generated
+          target_path: %SF_WEB_DIR%/.htaccess
+          #location of the template to use
+          template_path: %SF_PLUGINS_DIR%/asCachedRoutingPlugin/data/.htaccess.template
+          #class of the config file creator
           class: ApacheModRewriteConfigFile
+        #individual rules for the webserver
         rule_format:
+          #class of the rule creator
           class: ApacheModRewriteRuleFormatter
+          #parameters optional
           parameters:
             rule_options: "[QSA,L]"   
       nginx:
         config_file:
+          target_path: %SF_WEB_DIR%/.nginx.conf
+          template_path: %SF_PLUGINS_DIR%/asCachedRoutingPlugin/data/nginx.conf.template
           class: NginxRewriteConfFile
         rule_format:
           class: NginxRewriteRuleFormatter
-      lighttpd:
-        config_file:
-          class: LighttpdConfigFile
-        rule_format:
-          class: LighttpdRuleFormatter

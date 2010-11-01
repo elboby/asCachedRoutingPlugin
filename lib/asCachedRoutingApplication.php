@@ -2,6 +2,13 @@
 
 class asCachedRoutingApplication
 {
+  protected $configuration;
+  
+  public function __construct($configuration)
+  {
+    $this->configuration = $configuration;
+  }
+  
   public function doProcess()  
   {    
     //get info from routing config
@@ -65,5 +72,10 @@ class asCachedRoutingApplication
       $controller->create();
     }
     return $out;
+  }
+  
+  protected function log($msg)
+  {
+    echo '{asCachedRoutingApplication} '.$msg."\n";
   }
 }

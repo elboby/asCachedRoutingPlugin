@@ -7,6 +7,8 @@ class WebServerHandlerFactory
   static function loadConfiguration($config_array)
   {
     self::$config_array = $config_array;
+    
+    var_dump($config_array);
   }
   
   static function getConfigurationFor($web_server)
@@ -27,7 +29,8 @@ class WebServerHandlerFactory
   {
     $class_config = self::getConfigurationFor($config_array['type']);
     
-    $rule = new $class_config['rule_format']['class']($route, $class_config['rule_format']['parameters']);
+    $param = (isset($class_config['rule_format']['parameters']))?$class_config['rule_format']['parameters']: array();
+    $rule = new $class_config['rule_format']['class']($route, $param);
     return $rule;
   }
 }

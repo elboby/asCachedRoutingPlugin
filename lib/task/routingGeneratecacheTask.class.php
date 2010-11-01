@@ -31,7 +31,7 @@ EOF;
     // add your code here
     WebServerHandlerFactory::loadConfiguration(sfConfig::get('app_asCachedRoutingPlugin_factory'));
     
-    $app = new asCachedRoutingApplication();
+    $app = new asCachedRoutingApplication($this->configuration);
     $app->doProcess();
   }
 }

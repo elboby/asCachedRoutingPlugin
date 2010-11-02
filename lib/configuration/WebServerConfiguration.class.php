@@ -14,12 +14,12 @@ class WebServerConfiguration
     $this->server = $server;
   }
   
-  public function getRuleInstance(sfRoute $route)
+  public function getRuleInstance($name, sfRoute $route)
   {
     $class_config = $this->config[ $this->server ][ 'rule_format' ];
     
     $param = (isset($class_config['class']['parameters']))?$class_config['class']['parameters']: array();
-    $rule = new $class_config['class']($route, $param);
+    $rule = new $class_config['class']($name, $route, $param);  
     return $rule;
   }
   

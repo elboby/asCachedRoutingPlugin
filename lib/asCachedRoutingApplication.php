@@ -30,7 +30,7 @@ class asCachedRoutingApplication
     
     foreach($routes as $name=>$route)
     {
-      $formatted_route = $this->formatRoute($route);
+      $formatted_route = $this->formatRoute($name, $route);
       
       if($formatted_route === null)
       { 
@@ -38,23 +38,23 @@ class asCachedRoutingApplication
       }
       else 
       {
-        $output[$name] = $formatted_route;
+        $output[] = $formatted_route;
       }
     }
 
     return $output;
   }
   
-  protected function formatRoute(sfRoute $route)
+  protected function formatRoute($name, sfRoute $route)
   {
       //rules with wildcards as module/action they should be at the end of the htaccess file
-      $array_defaults = $route->getDefaults();
+      $array_defaults = $route->getDefaults();      
       if( ! isset($array_defaults['module']) || ! isset($array_defaults['action'])  ) 
       {
         return null; 
       }
       
-      return $this->web_server_config->getRuleInstance($route);
+      return $this->web_server_config->getRuleInstance($name, $route);
   }
   
   protected function createControllerFile($formatted_routes)
@@ -68,11 +68,11 @@ class asCachedRoutingApplication
   {
     $out = '';
     
-    foreach($arrayRules as $name=>$rule)
+    foreach($arrayRules as $rule)
     {
-      $target_file = $this->controller_config->getTargetFileName($name);
+      $target_file = $this->controller_config->getTargetFileName($rule->getName());
       
-      $controller = $this->controller_config->getCachedControllerInstance($name, $rule);
+      $controller = $this->controller_config->getCachedControllerInstance($rule->getName(), $rule);
       $controller->create();
       
       $out .= $rule->getRule($target_file)."\n";

@@ -6,7 +6,7 @@ all:
       template_path: %SF_PLUGINS_DIR%/asCachedRoutingPlugin/data/index.php.template
       #directory in %SF_WEB_DIR% that will be used to generate the rule
       #also where the controller will be stored
-      target_directory: _cache_routing/
+      target_directory: _cache_routing
     #here you can customize the factory 
     #also the way config file/rules will be handled by defining which class to call
     web_server_config:

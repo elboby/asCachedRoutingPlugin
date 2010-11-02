@@ -44,11 +44,11 @@ class FromTemplateFile
   }
   
     
-  public function create($rulesBlock)
+  public function create()
   {
-    if(!is_writable($this->path))
+    if(!self::is_writable($this->path))
     {
-      throw new FileNotFoundException($this->path);
+      throw new Exception('Can not create this file: '.$this->path);
     }
     
     $str = file_get_contents($this->template);
@@ -63,22 +63,21 @@ class FromTemplateFile
     file_put_contents($this->path, $str);
   }
   
-  function is_writable() 
+  static public function is_writable($path) 
   {
-
-    if ($this->path{strlen($this->path)-1}=='/') // recursively return a temporary file path
+    if ($path{strlen($path)-1}=='/') // recursively return a temporary file path
     {    
-      return is__writable($this->path.uniqid(mt_rand()).'.tmp');
+      return self::is_writable($path.uniqid(mt_rand()).'.tmp');
     }
-    else if (is_dir($this->path))
+    else if (is_dir($path))
     {
-      return is__writable($this->path.'/'.uniqid(mt_rand()).'.tmp');
+      return self::is_writable($path.'/'.uniqid(mt_rand()).'.tmp');
     }
     
     // check tmp file for read/write capabilities
-    $rm = file_exists($this->path);
+    $rm = file_exists($path);
     
-    $f = @fopen($this->path, 'a');
+    $f = @fopen($path, 'a');
     if ($f===false)
     {
       return false;
@@ -87,7 +86,7 @@ class FromTemplateFile
     
     if (!$rm)
     {
-      unlink($this->path);
+      unlink($path);
     }
     
     return true;

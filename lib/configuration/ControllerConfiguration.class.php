@@ -23,7 +23,6 @@ class ControllerConfiguration
                   'frontend', 'prod',
                   sfConfig::get('sf_web_dir').'/'.$this->getTargetFileName($name)
                 );
-                
     $controller->loadTemplate($this->config['template_path']);
     $controller->loadRule($name, $rule->getComposite());
             

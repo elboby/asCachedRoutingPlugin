@@ -2,19 +2,26 @@
 
 abstract class RuleFormatter
 {
-  private $route;
-  private $regex;
-  private $formatted;
+  private $route,
+    $name,
+    $regex,
+    $formatted;
   protected $has_pattern_key;
   protected $pattern_keys;
   protected $options;
   
-  public function __construct(sfRoute $route, $options)
+  public function __construct($name, sfRoute $route, $options)
   {
     $this->route = $route;
+    $this->name = $name;
     $this->formatted = false;
     $this->has_pattern_key = false;
     $this->options = $options;
+  }
+  
+  public function getName()
+  {
+    return $this->name;
   }
   
   public function getComposite()

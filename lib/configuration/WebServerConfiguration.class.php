@@ -18,7 +18,7 @@ class WebServerConfiguration
   {
     $class_config = $this->config[ $this->server ][ 'rule_format' ];
     
-    $param = (isset($class_config['class']['parameters']))?$class_config['class']['parameters']: array();
+    $param = (isset($class_config['parameters']))?$class_config['parameters']: array();
     $rule = new $class_config['class']($name, $route, $param);  
     return $rule;
   }

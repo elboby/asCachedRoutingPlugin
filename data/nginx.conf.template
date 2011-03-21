@@ -8,7 +8,11 @@
 ## You can edit it but you need to leave the rules token in it
 ##
 
-
+if ($request_filename !~ "\.(js|htc|ico|gif|jpg|png|css)$") {
   ## Here is the token that will be replaced by the generated rules
   ## You can move his place but do not alter it!!!
   ###%RULES_TOKEN%###
+
+  ## default fallback to normal controller.
+  rewrite ^(.*) /index.php last;
+}

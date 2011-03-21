@@ -46,6 +46,11 @@ class FromTemplateFile
     
   public function create()
   {
+    if(!self::checkRootPath($this->path))
+    {
+      throw new Exception('Can not create subfolder for: '.$this->path);
+    }
+    
     if(!self::is_writable($this->path))
     {
       throw new Exception('Can not create this file: '.$this->path);
@@ -90,5 +95,22 @@ class FromTemplateFile
     }
     
     return true;
+  }
+  
+  static function checkRootPath($path)
+  {
+    $rootpath = dirname($path);
+    if(is_dir($rootpath))
+    {
+      return true;
+    }
+    elseif(mkdir($rootpath, 0777, true))
+    { 
+      return true;
+    }
+    else
+    {
+      return false;
+    }
   }
 }

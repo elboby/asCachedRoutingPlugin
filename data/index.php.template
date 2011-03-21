@@ -18,6 +18,7 @@ sfConfig::set('sf_factory_request', 'asSimpleWebRequest');
 $rh = asRouteParameterHolder::getInstance();
 $rh->setRouteName('###%ROUTENAME%###');
 $rh->setParameters(array(
+    ###%PARAMETERS_DEFAULT_ARRAY%###
     ###%PARAMETERS_ARRAY%###
     'module' => '###%MODULE%###',
     'action' => '###%ACTION%###'

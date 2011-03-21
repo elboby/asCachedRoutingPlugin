@@ -19,6 +19,19 @@ class CachedControllerFile extends FromTemplateFile
     $this->addReplacement('###%ROUTENAME%###', $name);
     $this->addReplacement('###%MODULE%###', $defaults['module']);
     $this->addReplacement('###%ACTION%###', $defaults['action']);
+    
+    unset($defaults['module']);
+    unset($defaults['action']);
+    if(count($defaults) > 0)
+    {
+      $txt = '';
+      foreach($defaults as $key=>$value)
+      {
+        $txt .= "'".$key."' => '".$value."',\n";
+      }
+  
+      $this->addReplacement('###%PARAMETERS_DEFAULT_ARRAY%###', $txt);
+    }
   }
   
   public function loadPatternKeys($array)

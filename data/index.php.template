@@ -24,5 +24,12 @@ $rh->setParameters(array(
     'action' => '###%ACTION%###'
   ));
 
+//TODO: check if the rules allow star params
+if(isset($_GET['_star']))
+{
+  $rh->setStarParameters($_GET['_star']);
+  unset($_GET['_star']);
+}
+
 sfContext::createInstance($configuration)->dispatch();
 //sfContext::createInstance($configuration)->getController()->forward('###%MODULE%###','###%ACTION%###');

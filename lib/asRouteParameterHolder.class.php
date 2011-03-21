@@ -34,4 +34,35 @@ class asRouteParameterHolder
   {
     return $this->parameters;
   }
+  
+  public function setStarParameters($star_string)
+  {
+    $array = explode('/', $star_string);
+    
+    $array_param = array();
+    foreach($array as $value)
+    {
+      if($value == '')
+      {
+        return;
+      }
+      
+      if(isset($holder))
+      {
+        $array_param[$holder] = $value;
+        unset($holder); 
+      }
+      else
+      {
+        $holder = $value;
+      }
+    }
+    if(isset($holder))
+    {
+      $array_param[$holder] = true;
+      unset($holder);
+    }
+    
+    $this->parameters = array_merge($array_param, $this->parameters);
+  }
 }

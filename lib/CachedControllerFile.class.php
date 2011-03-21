@@ -22,16 +22,15 @@ class CachedControllerFile extends FromTemplateFile
     
     unset($defaults['module']);
     unset($defaults['action']);
+    $txt = '';
     if(count($defaults) > 0)
     {
-      $txt = '';
       foreach($defaults as $key=>$value)
       {
         $txt .= "'".$key."' => '".$value."',\n";
       }
-  
-      $this->addReplacement('###%PARAMETERS_DEFAULT_ARRAY%###', $txt);
     }
+    $this->addReplacement('###%PARAMETERS_DEFAULT_ARRAY%###', $txt);
   }
   
   public function loadPatternKeys($array)

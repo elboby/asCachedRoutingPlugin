@@ -8,15 +8,17 @@ abstract class RuleFormatter
     $formatted;
   protected $has_pattern_key;
   protected $pattern_keys;
-  protected $options;
+  protected $options, $debug;
   
-  public function __construct($name, sfRoute $route, $options)
+  public function __construct($name, sfRoute $route, $options, $debug=false)
   {
     $this->route = $route;
     $this->name = $name;
     $this->formatted = false;
     $this->has_pattern_key = false;
     $this->options = $options;
+    
+    $this->debug = $debug;
   }
   
   public function getName()
@@ -36,6 +38,7 @@ abstract class RuleFormatter
       $this->format();
     }
     
+    $this->regex = str_replace(" ", '', $this->regex);
     return $this->regex;
   }
   
@@ -47,7 +50,7 @@ abstract class RuleFormatter
     $this->regex = str_replace('$#x', '$#', $this->regex);
     $this->regex = str_replace('#', '', $this->regex);
             
-    echo 'regex: '.$this->regex."\n";
+    if($this->debug) echo 'regex: '.$this->regex."\n";
     
     $this->formatPatternKeys();
     
@@ -71,7 +74,7 @@ abstract class RuleFormatter
     }
     
     $this->has_pattern_key = true;
-    echo "\t".'cleaned regex: '.$this->regex."\n";
+    if($this->debug) echo "\t".'cleaned regex: '.$this->regex."\n";
   }
   
   protected function getPatternKeys()

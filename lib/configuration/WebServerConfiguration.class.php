@@ -2,10 +2,11 @@
 
 class WebServerConfiguration
 {
-  protected $config, $server;
+  protected $config, $server, $debug;
   
-  public function __construct($config)
+  public function __construct($config, $debug=false)
   {
+    $this->debug = $debug;
     $this->config = $config;
   }
   
@@ -19,7 +20,7 @@ class WebServerConfiguration
     $class_config = $this->config[ $this->server ][ 'rule_format' ];
     
     $param = (isset($class_config['parameters']))?$class_config['parameters']: array();
-    $rule = new $class_config['class']($name, $route, $param); 
+    $rule = new $class_config['class']($name, $route, $param, $this->debug); 
     
     return $rule;
   }

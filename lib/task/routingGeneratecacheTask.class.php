@@ -12,6 +12,7 @@ class routingGeneratecacheTask extends sfBaseTask
     $this->addOptions(array(
       new sfCommandOption('application', null, sfCommandOption::PARAMETER_REQUIRED, 'The application name', 'frontend'),
       new sfCommandOption('env', null, sfCommandOption::PARAMETER_REQUIRED, 'The environment', 'prod'),
+      new sfCommandOption('debug', null, sfCommandOption::PARAMETER_REQUIRED, 'debug boolean', false),
       // add your own options here
     ));
 
@@ -29,11 +30,16 @@ EOF;
   protected function execute($arguments = array(), $options = array())
   {
     // add your code here
+    $debug = !($options['debug']===false);    
     
-    $web_server_config = new WebServerConfiguration(sfConfig::get('app_asCachedRoutingPlugin_web_server_config'));
+    $web_server_config = new WebServerConfiguration(sfConfig::get('app_asCachedRoutingPlugin_web_server_config'), $debug);
     $web_server_config->initFor($arguments['server']);
     
-    $controller_config = new ControllerConfiguration(sfConfig::get('app_asCachedRoutingPlugin_controller'));
+    $controller_config = new ControllerConfiguration(
+                                sfConfig::get('app_asCachedRoutingPlugin_controller'),
+                                $options['application'],
+                                $options['env']
+                              );
     $controller_config->init();
     
     $app = new asCachedRoutingApplication($this->configuration, $web_server_config, $controller_config);

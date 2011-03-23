@@ -27,7 +27,7 @@ class CachedControllerFile extends FromTemplateFile
     {
       foreach($defaults as $key=>$value)
       {
-        $txt .= "'".$key."' => '".$value."',\n";
+        $txt .= "'".$key."' => (isset(\$_GET['".$key."'])&&\$_GET['".$key."']!='')?\$_GET['".$key."']:'".$value."',\n";
       }
     }
     $this->addReplacement('###%PARAMETERS_DEFAULT_ARRAY%###', $txt);

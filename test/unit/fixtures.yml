@@ -1,0 +1,71 @@
+-
+  input:
+    rule:
+      module1index:
+        url:   /module1
+        param: { module: module1, action: index }
+  output: 
+    regex:        ^/module1$
+    rewrite:      rewrite ^/module1$ /_cache_routing/module1index.php last;
+  comment: route with single strings no parameters and no other param
+-
+  input:
+    rule:
+      module1index:
+        url:   /module1/xx
+        param: { module: module1, action: index }
+  output: 
+    regex:        ^/module1/xx$
+    rewrite:      rewrite ^/module1/xx$ /_cache_routing/module1index.php last;
+  comment: route with 2 strings no parameters and no other param
+-
+  input:
+    rule:
+      module2index:
+        url:   /module2/:name
+        param: { module: module2, action: index }
+  output: 
+    regex:        ^/module2/([^//\.]+)$
+    rewrite:      rewrite ^/module2/([^//\.]+)$ /_cache_routing/module2index.php?name=$1 last;
+  comment: route with 1 parameters and no other params
+-
+  input:
+    rule:
+      module2find:
+        url:   /find/:name/:value
+        param: { module: module2, action: find }
+  output: 
+    regex:        ^/find/([^//\.]+)/([^//\.]+)$
+    rewrite:      rewrite ^/find/([^//\.]+)/([^//\.]+)$ /_cache_routing/module2find.php?name=$1&value=$2 last;
+  comment: route with 2 parameters and no other params
+-
+  input:
+    rule:
+      module2findvalue:
+        url:   /find2/:value/*
+        param: { module: module2, action: find, name: boby }
+  output: 
+    regex:        ^/find2/([^//\.]+)(?:(?:/(.*))?)?$
+    rewrite:      rewrite ^/find2/([^//\.]+)(?:(?:/(.*))?)?$ /_cache_routing/module2findvalue.php?value=$1&_star=$2 last;
+  comment: route with 1 parameters and other params
+-
+  input:
+    rule:
+      module3index:
+        url:   /module3/index/*
+        param: { module: module2, action: find, name: boby }
+  output: 
+    regex:        ^/module3/index(?:(?:/(.*))?)?$
+    rewrite:      rewrite ^/module3/index(?:(?:/(.*))?)?$ /_cache_routing/module3index.php?_star=$1 last;
+  comment: route with only other params
+-
+  input:
+    rule:
+      membership:
+        url:   /mitgliedschaft/:itemid/*
+        param: { module: payment, action: membership, itemid: 7 }
+  output: 
+    regex:        ^/mitgliedschaft(?:/([^//\.]+)(?:(?:/(.*))?)?)?$
+    rewrite:      rewrite ^/mitgliedschaft(?:/([^//\.]+)(?:(?:/(.*))?)?)?$ /_cache_routing/membership.php?itemid=$1&_star=$2 last;
+  comment: route with 1 param defaulted and other params
+  

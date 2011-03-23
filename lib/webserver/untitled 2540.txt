@@ -1,0 +1,6 @@
+membership:
+  url: /mitgliedschaft/:itemid/*
+  param: { module: payment, action: membership, itemid: 7 }
+  options: { case_sensitive: false }
+
+rewrite ^/mitgliedschaft(?:/([^//\.]+) (?:(?:/(.*))? )?)?$i /_cache_routing/membership.php?itemid=$1&_star=$2 last;

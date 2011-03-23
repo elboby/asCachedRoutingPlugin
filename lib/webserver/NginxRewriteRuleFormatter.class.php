@@ -15,7 +15,7 @@ class NginxRewriteRuleFormatter extends RuleFormatter
   public function getRule($targetFile)
   {
     $rw_rule = 'rewrite '.$this->getRegex().' /'.$targetFile.$this->getPatternKeys().' '.$this->getRuleOptions();
-    echo "\t".$rw_rule."\n\n";
+    if($this->debug) echo "\t".$rw_rule."\n\n";
     return $rw_rule;
   }
   

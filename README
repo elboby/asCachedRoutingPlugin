@@ -4,16 +4,18 @@ asCachedRoutingPlugin
 Introduction
 ---
 This plugin permits to generate a routing file for webserver like Apache/NGINX based on the symfony routing file.
-This will remove the routing processing away from the php scripts.
+This will remove the routing processing away from the php scripts and hopefully improve performance.
+It also allows to have a specific entry script for each route which makes things easier to debug.
 The routing is still needed to generate internal urls.
 
 
 How to use
 ---
-* Install the plugin
-* Configure the right application (frontend) in the right environment (prod) via app.yml
-* Setup your webserver to accept this file.
-* Launch the pake task to generate the routing classes: ./symfont routing:generate-cache nginx
+* Install the plugin in the plugins folder.
+* Configure the plugin via app.yml (an example can be found in plugins/asCachedRoutingPlugin/config/app.yml).
+* Clear the cache.
+* Launch the pake task to generate the routing files: ./symfony routing:generate-cache nginx
+* Setup your webserver to accept the generated file.
 
 Options
 ---
@@ -24,11 +26,15 @@ To enable debug output: --debug=true
 
 Configuration
 ---
+There are comments in the example in plugins/asCachedRoutingPlugin/config/app.yml.
+The classes for the controller and webserver configuration can be changed easily to add more functionality.
+The templates for the controller file and webserver configuration file can also be easily changed; make sure to respect the placeholders.
 
 Apache setup
 ---
 As the htaccess file at the root of the web folder is already read by Apache. There is nothing to change.
 Specific rules in .htaccess file needs to be specify in the template though. You can specify a new template file location in the configuration.
+This was not heavily tested, production/development is now only done in Nginx.
 
 Nginx setup
 ---
@@ -81,7 +87,16 @@ http {
   }
 }
 
-
+Nginx_group setup
+---
+This configuration allows to have rule sets group by some location (like the first items in the url).
+It avoids having a big list of rules, which could affect performance of nginx.
+Basically you will have for example:
+location /module1{
+  rewrite ^/module1/index$ /_cache_routing/frontend/module1index.php last;
+  rewrite ^/module1/foo$ /_cache_routing/frontend/module1foo.php last;
+}
+The main nginx configuration has to be changed compared to the previous one.
 
 Test
 ---

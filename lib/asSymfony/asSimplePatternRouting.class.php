@@ -21,7 +21,7 @@ class asSimplePatternRouting extends sfPatternRouting
   {
     $rh = asRouteParameterHolder::getInstance();
     $name = $rh->getRouteName();
-    $route = $this->routes[$name];
+    $route = unserialize($this->routes[$name]);
     $parameters = $rh->getParameters();
 
     if (isset($parameters['_star']))

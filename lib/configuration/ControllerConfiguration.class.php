@@ -16,7 +16,7 @@ class ControllerConfiguration
   
   public function getTargetFileName($name)
   {
-    return $this->config['target_directory'].'/'.$name.'.php';
+    return $this->config['target_directory'].'/'.$this->application.'/'.$name.'.php';
   }
   
   public function getCachedControllerInstance($name, $rule)

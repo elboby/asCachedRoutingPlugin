@@ -34,3 +34,10 @@ all:
           class: NginxRewriteConfFile
         rule_format:
           class: NginxRewriteRuleFormatter
+      nginx_group:
+        config_file:
+          target_path: %SF_WEB_DIR%/.nginx.conf
+          template_path: %SF_PLUGINS_DIR%/asCachedRoutingPlugin/data/nginx.group.conf.template
+          class: NginxGroupRewriteConfFile
+        rule_format:
+          class: NginxRewriteRuleFormatter

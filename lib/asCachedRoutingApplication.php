@@ -66,7 +66,7 @@ class asCachedRoutingApplication
   
   private function processBlock($arrayRules)
   {
-    $out = '';
+    $out = array();
     
     foreach($arrayRules as $rule)
     {
@@ -75,7 +75,7 @@ class asCachedRoutingApplication
       $controller = $this->controller_config->getCachedControllerInstance($rule->getName(), $rule);
       $controller->create();
       
-      $out .= $rule->getRule($target_file)."\n";
+      $out[] = $rule->getRule($target_file);
     }
     return $out;
   }
